@@ -1,0 +1,146 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{transparent}
+\usepackage{eso-pic}
+\usepackage{caption}
+\definecolor{GeoOrange}{HTML}{FF8C00}
+\definecolor{GeoBlue}{HTML}{0D47A1}
+\AddToShipoutPictureBG{
+  \AtPageCenter{
+    \makebox[0pt]{\transparent{0.06}\includegraphics[width=12cm]{Iconos/logo_geopol.png}}
+  }
+}
+\hypersetup{colorlinks=true, linkcolor=GeoBlue, urlcolor=GeoOrange}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize \textcolor{GeoBlue}{\textbf{GeoPol Web}} - Reporte Técnico}
+\fancyhead[R]{\footnotesize Universidad Distrital F.J.C.}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\begin{document}
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[GeoBlue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  \fill[GeoOrange] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.5cm]current page.north east);
+  \fill[GeoBlue!5] (current page.south west) rectangle ([yshift=4cm]current page.south east);
+\end{tikzpicture}
+\vspace*{-2cm}
+\begin{center}
+  \textcolor{white}{\Huge \textbf{GEOPORTAL WEB (GeoPol)}} \\[0.5cm]
+  \textcolor{white}{\large \textit{''Máxima precisión al alcance de tus manos''}} \\[2cm]
+  \vspace{3cm}
+  {\LARGE \textbf{INFORME TÉCNICO DE INGENIERÍA}} \\[0.5cm]
+  {\Large \textbf{Informe Técnico de Altimetría\\ (Nivelación Cerrada)}} \\[2cm]
+  \begin{flushleft}
+    \Large \textbf{Autores del Procesamiento:}\\[0.2cm]
+    \large $\bullet$ Kevin Stiven Cubillos Ramirez \\[0.1cm]
+    \large $\bullet$ Sergio Eduardo Barbosa Torres \\[0.1cm]
+    \vspace{1cm}
+    \Large \textbf{Tutor - Director de Proyecto:}\\[0.2cm]
+    \large $\bullet$ Ing. Edgar Ladino
+  \end{flushleft}
+  \vfill
+  \textbf{UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS}\\[0.2cm]
+  Facultad de Medio Ambiente y Recursos Naturales \\ Ingeniería Topográfica / Civil \\[0.2cm]
+  Bogotá D.C. -- 28 de July de 2026
+\end{center}
+\end{titlepage}
+\tableofcontents
+\newpage
+\section{Marco Teórico y Referencia Altimétrica}
+El presente informe detalla el cálculo, ajuste y compensación de una red de apoyo altimétrico. El proceso se fundamenta en la Nivelación Geométrica o Directa, garantizando la transferencia de cotas desde un Banco de Nivel (BM) de origen hacia los puntos de interés.
+Al tratarse de una Nivelación Cerrada, el circuito inicia y termina en el mismo punto de control, lo que permite cuantificar el error de cierre evaluando la diferencia entre la cota final calculada y la cota de partida.
+\section{Cartera Altimétrica Compensada}
+A continuación se relacionan las lecturas de campo (vistas atrás, intermedias y adelante) junto con las cotas instrumentales y las elevaciones ajustadas tras el prorrateo del error de cierre:
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Cartera de Nivelación Procesada (Parte 1)}
+  \label{tab:nivelacion_0}
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Estaca / Punto}} & \textcolor{white}{\textbf{Vista Atrás (+)}} & \textcolor{white}{\textbf{Altura Inst. (HI)}} & \textcolor{white}{\textbf{Vista Intermedia (-)}} & \textcolor{white}{\textbf{Vista Adelante (-)}} & \textcolor{white}{\textbf{Cota Calculada}} \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    BM-1 & 1.250 & 101.250 &  &  & 100.000 \\
+    \hline
+    \rowcolor{white}
+    K0+000 &  &  & 1.100 &  & 100.150 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    K0+010 &  &  & 1.550 &  & 99.700 \\
+    \hline
+    \rowcolor{white}
+    PC-1 & 1.420 & 101.690 &  & 0.980 & 100.270 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    K0+020 &  &  & 1.320 &  & 100.370 \\
+    \hline
+    \rowcolor{white}
+    BM-1 &  &  &  & 1.685 & 100.005 \\
+    \hline
+  \end{tabular}
+\end{table}
+\vspace{0.8cm}
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Cartera de Nivelación Procesada (Parte 2)}
+  \label{tab:nivelacion_1}
+  \begin{tabular}{|c|c|c|c|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Estaca / Punto}} & \textcolor{white}{\textbf{Vista Atrás (+)}} & \textcolor{white}{\textbf{Corrección (m)}} & \textcolor{white}{\textbf{Cota Ajustada}} \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    BM-1 & 1.250 & 0.0000 & 100.000 \\
+    \hline
+    \rowcolor{white}
+    K0+000 &  & -0.0025 & 100.148 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    K0+010 &  & -0.0025 & 99.698 \\
+    \hline
+    \rowcolor{white}
+    PC-1 & 1.420 & -0.0025 & 100.267 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    K0+020 &  & -0.0050 & 100.365 \\
+    \hline
+    \rowcolor{white}
+    BM-1 &  & -0.0050 & 100.000 \\
+    \hline
+  \end{tabular}
+\end{table}
+\vspace{0.8cm}
+
+\section{Análisis de Errores y Compensación Altimétrica}
+Las métricas de validación geométrica del circuito arrojaron los siguientes resultados:
+\begin{itemize}
+  \item \textbf{Sumatoria Vista Atrás ($\Sigma V^+$):} 2.670 m
+  \item \textbf{Sumatoria Vista Adelante ($\Sigma V^-$):} 2.665 m
+  \item \textbf{Cota Final Calculada (Cruda):} 100.005 m
+  \item \textbf{Cota Teórica Esperada:} 100.000 m
+  \item \textbf{Error de Cierre Altimétrico:} 0.0050 m (5.0 mm)
+\end{itemize}
+\section{Perfil Topográfico de Nivelación}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{Reportes_PDF/Perfil_Nivelacion.png}
+  \caption{Perfil altimétrico de la línea de nivelación compensada}
+\end{figure}
+\section{Conclusiones}
+El ajuste altimétrico se ha distribuido de manera proporcional en los puntos de cambio, obteniendo un conjunto de elevaciones definitivas aptas para la densificación de cotas, control vertical y ejecución de obras civiles.
+\end{document}

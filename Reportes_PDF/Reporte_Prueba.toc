@@ -1,0 +1,9 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Marco Teórico y Referencia Geodésica}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Sistema de Georreferenciación (MAGNA-SIRGAS)}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Fundamento Matemático: Abierta}{2}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Trabajo de Campo: Registro de Observaciones}{2}{section.2}%
+\contentsline {section}{\numberline {3}Cálculo, Análisis de Errores y Compensación}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Cartera Final de Coordenadas Ajustadas}{4}{subsection.3.1}%
+\contentsline {section}{\numberline {4}Esquema Geométrico de la Red Planimétrica}{5}{section.4}%
+\contentsline {section}{\numberline {5}Conclusiones y Dictamen Técnico}{5}{section.5}%

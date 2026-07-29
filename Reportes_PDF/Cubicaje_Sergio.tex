@@ -1,0 +1,351 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{transparent}
+\usepackage{eso-pic}
+\usepackage{caption}
+\definecolor{GeoOrange}{HTML}{FF8C00}
+\definecolor{GeoBlue}{HTML}{0D47A1}
+\AddToShipoutPictureBG{
+  \AtPageCenter{
+    \makebox[0pt]{\transparent{0.06}\includegraphics[width=12cm]{Iconos/logo_geopol.png}}
+  }
+}
+\hypersetup{colorlinks=true, linkcolor=GeoBlue, urlcolor=GeoOrange}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize \textcolor{GeoBlue}{\textbf{GeoPol Web}} - Reporte Técnico}
+\fancyhead[R]{\footnotesize Universidad Distrital F.J.C.}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\begin{document}
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[GeoBlue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  \fill[GeoOrange] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.5cm]current page.north east);
+  \fill[GeoBlue!5] (current page.south west) rectangle ([yshift=4cm]current page.south east);
+\end{tikzpicture}
+\vspace*{-2cm}
+\begin{center}
+  \textcolor{white}{\Huge \textbf{GEOPORTAL WEB (GeoPol)}} \\[0.5cm]
+  \textcolor{white}{\large \textit{''Máxima precisión al alcance de tus manos''}} \\[2cm]
+  \vspace{3cm}
+  {\LARGE \textbf{INFORME TÉCNICO DE INGENIERÍA}} \\[0.5cm]
+  {\Large \textbf{Memorias de Cálculo Matemático y Diseño Vial\\ (Cubicaje de Volúmenes)}} \\[2cm]
+  \begin{flushleft}
+    \Large \textbf{Autores del Procesamiento:}\\[0.2cm]
+    \large $\bullet$ Kevin Stiven Cubillos Ramirez \\[0.1cm]
+    \large $\bullet$ Sergio Eduardo Barbosa Torres \\[0.1cm]
+    \vspace{1cm}
+    \Large \textbf{Tutor - Director de Proyecto:}\\[0.2cm]
+    \large $\bullet$ Ing. Edgar Ladino
+  \end{flushleft}
+  \vfill
+  \textbf{UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS}\\[0.2cm]
+  Facultad de Medio Ambiente y Recursos Naturales \\ Ingeniería Topográfica / Civil \\[0.2cm]
+  Bogotá D.C. -- 27 de July de 2026
+\end{center}
+\end{titlepage}
+\tableofcontents
+\newpage
+\section{Introducción y Metodología de Cubicaje}
+Este reporte detalla el cálculo de movimiento de tierras para el proyecto vial. El cálculo de volúmenes se ejecutó mediante el \textbf{Método de las Áreas Medias (Average End Area Method)}, evaluando sección transversal por sección transversal de forma secuencial.
+\subsection{Criterios del Diagrama de Masas (Curva Masa)}
+Para el análisis del movimiento de tierras, se ha calculado el volumen neto acumulado. La Curva Masa permite visualizar analíticamente el déficit o superávit de material a lo largo del eje del proyecto, facilitando el diseño de las zonas de préstamo y botadero.
+\section{Resumen Ejecutivo de Volúmenes}
+\begin{itemize}
+  \item \textbf{Volumen Total de Corte (Excavación):} 320.228 $m^3$
+  \item \textbf{Volumen Total de Relleno (Terraplén):} 135.428 $m^3$
+  \item \textbf{Balance Neto del Proyecto:} 184.800 $m^3$
+\end{itemize}
+\section{Cuadro de Movimiento de Tierras}
+A continuación, se presenta la tabla de cálculo tabulada. Los valores negativos indican predominancia de relleno, mientras que los positivos corresponden a áreas de corte.
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Cuadro generalizado de cubicaje (Parte 1)}
+  \label{tab:cubicaje_0}
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Abscisa (K)}} & \textcolor{white}{\textbf{Área Corte (m²)}} & \textcolor{white}{\textbf{Área Relleno (m²)}} & \textcolor{white}{\textbf{Vol. Corte (m³)}} & \textcolor{white}{\textbf{Vol. Relleno (m³)}} \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    0.000 & 24.720 & 0.000 & 0.000 & 0.000 \\
+    \hline
+    \rowcolor{white}
+    2.000 & 21.720 & 0.000 & 46.440 & 0.000 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    4.000 & 18.720 & 0.000 & 40.440 & 0.000 \\
+    \hline
+    \rowcolor{white}
+    6.000 & 15.720 & 0.000 & 34.440 & 0.000 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    8.000 & 12.720 & 0.000 & 28.440 & 0.000 \\
+    \hline
+    \rowcolor{white}
+    10.000 & 9.723 & 0.003 & 22.443 & 0.003 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    12.000 & 7.022 & 0.302 & 16.745 & 0.305 \\
+    \hline
+    \rowcolor{white}
+    14.000 & 4.800 & 1.080 & 11.822 & 1.382 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    16.000 & 3.060 & 2.340 & 7.860 & 3.420 \\
+    \hline
+    \rowcolor{white}
+    18.000 & 1.744 & 4.024 & 4.804 & 6.364 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    20.000 & 0.795 & 6.075 & 2.539 & 10.099 \\
+    \hline
+    \rowcolor{white}
+    22.000 & 0.214 & 8.494 & 1.009 & 14.569 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    24.000 & 0.001 & 11.281 & 0.215 & 19.775 \\
+    \hline
+    \rowcolor{white}
+    26.000 & 0.000 & 14.280 & 0.001 & 25.561 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    28.000 & 0.000 & 17.280 & 0.000 & 31.560 \\
+    \hline
+    \rowcolor{white}
+    30.000 & 15.720 & 0.000 & 15.720 & 17.280 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    32.000 & 12.720 & 0.000 & 28.440 & 0.000 \\
+    \hline
+    \rowcolor{white}
+    34.000 & 9.723 & 0.003 & 22.443 & 0.003 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    36.000 & 7.022 & 0.302 & 16.745 & 0.305 \\
+    \hline
+    \rowcolor{white}
+    38.000 & 4.800 & 1.080 & 11.822 & 1.382 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    40.000 & 3.060 & 2.340 & 7.860 & 3.420 \\
+    \hline
+  \end{tabular}
+\end{table}
+\vspace{0.8cm}
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Cuadro generalizado de cubicaje (Parte 2)}
+  \label{tab:cubicaje_1}
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Abscisa (K)}} & \textcolor{white}{\textbf{Vol. Acumulado Corte}} & \textcolor{white}{\textbf{Vol. Acumulado Relleno}} & \textcolor{white}{\textbf{Volumen Neto (m³)}} & \textcolor{white}{\textbf{Masa Acumulada (m³)}} \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    \hline
+    \rowcolor{white}
+    2.000 & 46.440 & 0.000 & 46.440 & 46.440 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    4.000 & 86.880 & 0.000 & 86.880 & 133.320 \\
+    \hline
+    \rowcolor{white}
+    6.000 & 121.320 & 0.000 & 121.320 & 254.640 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    8.000 & 149.760 & 0.000 & 149.760 & 404.400 \\
+    \hline
+    \rowcolor{white}
+    10.000 & 172.203 & 0.003 & 172.200 & 576.600 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    12.000 & 188.948 & 0.308 & 188.640 & 765.240 \\
+    \hline
+    \rowcolor{white}
+    14.000 & 200.770 & 1.690 & 199.080 & 964.320 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    16.000 & 208.630 & 5.110 & 203.520 & 1167.840 \\
+    \hline
+    \rowcolor{white}
+    18.000 & 213.434 & 11.474 & 201.960 & 1369.800 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    20.000 & 215.973 & 21.573 & 194.400 & 1564.200 \\
+    \hline
+    \rowcolor{white}
+    22.000 & 216.982 & 36.142 & 180.840 & 1745.040 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    24.000 & 217.197 & 55.917 & 161.280 & 1906.320 \\
+    \hline
+    \rowcolor{white}
+    26.000 & 217.198 & 81.478 & 135.720 & 2042.040 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    28.000 & 217.198 & 113.038 & 104.160 & 2146.200 \\
+    \hline
+    \rowcolor{white}
+    30.000 & 232.918 & 130.318 & 102.600 & 2248.800 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    32.000 & 261.358 & 130.318 & 131.040 & 2379.840 \\
+    \hline
+    \rowcolor{white}
+    34.000 & 283.801 & 130.321 & 153.480 & 2533.320 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    36.000 & 300.546 & 130.626 & 169.920 & 2703.240 \\
+    \hline
+    \rowcolor{white}
+    38.000 & 312.368 & 132.008 & 180.360 & 2883.600 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    40.000 & 320.228 & 135.428 & 184.800 & 3068.400 \\
+    \hline
+  \end{tabular}
+\end{table}
+\vspace{0.8cm}
+
+\section{Diagrama de Masas (Curva Masa)}
+Evolución gráfica del volumen acumulado en función de la abscisa (Distancia en K).
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{Reportes_PDF/Curva_Masa.png}
+  \\caption{Diagrama de Masas para compensación longitudinal de material}
+\end{figure}
+\section{Conclusiones y Dictamen Técnico}
+\begin{itemize}
+  \item Dado el balance volumétrico resultante, el proyecto requiere de un transporte de material excedentario hacia un sitio de disposición final (botadero), ya que los volúmenes de excavación superan a los terraplenes requeridos.
+  \item El \textbf{Diagrama de Masas} demuestra los puntos críticos de corte y la distribución longitudinal del material, permitiendo a los ingenieros y planificadores viales organizar el acarreo en volquetas de manera eficiente.
+\end{itemize}
+\newpage
+\section{Anexo Gráfico: Perfiles de Secciones Transversales}
+A continuación, se adjuntan los perfiles de todas las abscisas calculadas. Conforme a las normativas de presentación de planos de diseño vial, las secciones se han ploteado ordenadas de forma ascendente: \textbf{de abajo hacia arriba y de izquierda a derecha}.
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K12.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K14.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K8.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K10.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K4.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K6.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K0.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K2.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \caption{Anexo Secciones Transversales - Plancha 1}
+\end{figure}
+\newpage
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K28.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K30.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K24.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K26.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K20.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K22.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K16.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K18.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \caption{Anexo Secciones Transversales - Plancha 2}
+\end{figure}
+\newpage
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.48\textwidth}
+    \vspace{4.5cm}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \vspace{4.5cm}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K40.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \vspace{4.5cm}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K36.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K38.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K32.000.png}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\linewidth]{Reportes_PDF/Sec_K34.000.png}
+  \end{minipage}
+  \\[0.3cm]
+  \caption{Anexo Secciones Transversales - Plancha 3}
+\end{figure}
+\end{document}

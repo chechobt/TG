@@ -1,0 +1,281 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{transparent}
+\usepackage{eso-pic}
+\usepackage{caption}
+\definecolor{GeoOrange}{HTML}{FF8C00}
+\definecolor{GeoBlue}{HTML}{0D47A1}
+\AddToShipoutPictureBG{
+  \AtPageCenter{
+    \makebox[0pt]{\transparent{0.06}\includegraphics[width=12cm]{Iconos/logo_geopol.png}}
+  }
+}
+\hypersetup{colorlinks=true, linkcolor=GeoBlue, urlcolor=GeoOrange}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize \textcolor{GeoBlue}{\textbf{GeoPol Web}} - Reporte Topográfico}
+\fancyhead[R]{\footnotesize Universidad Distrital F.J.C.}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\begin{document}
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[GeoBlue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  \fill[GeoOrange] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.5cm]current page.north east);
+  \fill[GeoBlue!5] (current page.south west) rectangle ([yshift=4cm]current page.south east);
+\end{tikzpicture}
+\vspace*{-2cm}
+\begin{center}
+  \textcolor{white}{\Huge \textbf{GEOPORTAL WEB (GeoPol)}} \\[0.5cm]
+  \textcolor{white}{\large \textit{''Máxima precisión al alcance de tus manos''}} \\[2cm]
+  \vspace{3cm}
+  {\LARGE \textbf{INFORME TÉCNICO DE LEVANTAMIENTO TOPOGRÁFICO}} \\[0.5cm]
+  {\Large \textbf{Cerrada}} \\[2cm]
+  \begin{flushleft}
+    \Large \textbf{Autores del Procesamiento:}\\[0.2cm]
+    \large $\bullet$ Kevin Stiven Cubillos Ramirez \\[0.1cm]
+    \large $\bullet$ Sergio Eduardo Barbosa Torres \\[0.1cm]
+    \vspace{1cm}
+    \Large \textbf{Tutor - Director de Proyecto:}\\[0.2cm]
+    \large $\bullet$ Ing. Edgar Ladino
+  \end{flushleft}
+  \vfill
+  \textbf{UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS}\\[0.2cm]
+  Facultad de Medio Ambiente y Recursos Naturales \\ Ingeniería Topográfica / Civil \\[0.2cm]
+  Bogotá D.C. -- 22 de July de 2026
+\end{center}
+\end{titlepage}
+\tableofcontents
+\newpage
+\section{Marco Teórico y Referencia Geodésica}
+El presente informe detalla el cálculo, ajuste y representación de una red de apoyo planimétrico. Este procesamiento se apoya en los lineamientos técnicos de la Topografía Clásica y la normatividad geodésica dictada por el \textbf{Instituto Geográfico Agustín Codazzi (IGAC)}.
+\subsection{Sistema de Georreferenciación (MAGNA-SIRGAS)}
+De acuerdo con la \textbf{Resolución 471 de 2020} (y su modificación en la Resolución 529 de 2020) emitida por el IGAC, el único sistema oficial de coordenadas para la República de Colombia es el Origen Nacional \textbf{MAGNA-SIRGAS (EPSG: 9377)}.
+El motor de proyección de \textit{GeoPol Web} se encuentra calibrado para transformar las capturas GPS satelitales (WGS84) al sistema plano cartesiano oficial, garantizando que el punto de amarre de la poligonal cuente con el rigor legal para su incorporación en bases de datos catastrales y de infraestructura.
+\subsection{Fundamento Matemático: Cerrada}
+Una Poligonal Cerrada de Circuito es aquella que inicia en una estación conocida y, tras medir una serie de vértices (deltas), retorna matemáticamente al mismo punto de origen. Esto permite una doble comprobación de errores:
+\begin{itemize}
+  \item \textbf{Cierre Angular:} La suma teórica de los ángulos internos debe cumplir $\Sigma \alpha = (n - 2) \cdot 180^\circ$. El error angular se compensa en partes iguales o ponderadas.
+  \item \textbf{Cierre Lineal:} Las sumatorias de las proyecciones corregidas en el eje Norte ($Y$) y Este ($X$) deben ser estrictamente cero ($\Sigma \Delta N = 0, \Sigma \Delta E = 0$). El error de cierre se ajusta mediante el método de la Brújula (Regla de Bowditch).
+\end{itemize}
+\section{Trabajo de Campo: Registro de Observaciones}
+En la siguiente sección se relacionan los datos brutos levantados en campo (ángulos horizontales, verticales, distancias inclinadas y alturas instrumentales). Por motivos de legibilidad y formato profesional (portrait), la cartera se segmenta garantizando la visualización de la estación ocupada y el punto visado en todas las tablas.
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Cartera de Observaciones Brutas (Parte 1)}
+  \label{tab:campo_0}
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Estacionado}} & \textcolor{white}{\textbf{Pto\_Obs}} & \textcolor{white}{\textbf{Hz\_G}} & \textcolor{white}{\textbf{Hz\_M}} & \textcolor{white}{\textbf{Hz\_S}} & \textcolor{white}{\textbf{Z\_G}} \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & 275.000 & 43.000 & 41.000 & 89.000 \\
+    \hline
+    \rowcolor{white}
+    P1 & P2 & 249.000 & 53.000 & 14.000 & 90.000 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P2 & P3 & 191.000 & 47.000 & 17.000 & 90.000 \\
+    \hline
+    \rowcolor{white}
+    P3 & P4 & 281.000 & 3.000 & 0.000 & 89.000 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P4 & P5 & 246.000 & 35.000 & 32.000 & 89.000 \\
+    \hline
+    \rowcolor{white}
+    P5 & GPS-11 & 188.000 & 26.000 & 50.000 & 89.000 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & 282.000 & 14.000 & 12.000 & 89.000 \\
+    \hline
+  \end{tabular}
+\end{table}
+\vspace{0.8cm}
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Cartera de Observaciones Brutas (Parte 2)}
+  \label{tab:campo_1}
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Estacionado}} & \textcolor{white}{\textbf{Pto\_Obs}} & \textcolor{white}{\textbf{Z\_M}} & \textcolor{white}{\textbf{Z\_S}} & \textcolor{white}{\textbf{Dist\_Inc}} & \textcolor{white}{\textbf{hi}} \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & 40.000 & 53.000 & 69.249 & 1.617 \\
+    \hline
+    \rowcolor{white}
+    P1 & P2 & 0.000 & 14.000 & 50.148 & 1.596 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P2 & P3 & 13.000 & 6.000 & 57.843 & 1.575 \\
+    \hline
+    \rowcolor{white}
+    P3 & P4 & 50.000 & 53.000 & 61.563 & 1.551 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P4 & P5 & 58.000 & 3.000 & 75.728 & 1.597 \\
+    \hline
+    \rowcolor{white}
+    P5 & GPS-11 & 21.000 & 11.000 & 31.260 & 1.541 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & 40.000 & 46.000 & 69.250 & 1.615 \\
+    \hline
+  \end{tabular}
+\end{table}
+\vspace{0.8cm}
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Cartera de Observaciones Brutas (Parte 3)}
+  \label{tab:campo_2}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Estacionado}} & \textcolor{white}{\textbf{Pto\_Obs}} & \textcolor{white}{\textbf{hr}} \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & 1.700 \\
+    \hline
+    \rowcolor{white}
+    P1 & P2 & 1.700 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P2 & P3 & 1.700 \\
+    \hline
+    \rowcolor{white}
+    P3 & P4 & 1.700 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P4 & P5 & 1.700 \\
+    \hline
+    \rowcolor{white}
+    P5 & GPS-11 & 1.700 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & 1.700 \\
+    \hline
+  \end{tabular}
+\end{table}
+\vspace{0.8cm}
+
+\section{Cálculo, Análisis de Errores y Compensación}
+El motor de cálculo topográfico procesó las observaciones, obteniendo las siguientes métricas de cierre antes de ejecutar el ajuste perimetral:
+\begin{table}[H]
+  \centering
+  \caption{Métricas de Cierre Geométrico}
+  \begin{tabular}{|l|l|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Parámetro Analizado}} & \textcolor{white}{\textbf{Magnitud del Error}} \\
+    \hline
+    Error Angular Bruto & 0.001388888888868678 \\
+    \rowcolor{GeoBlue!5}
+    Error Horizontal Este ($e_x$) & -0.00039 m \\
+    Error Horizontal Norte ($e_y$) & -0.00326 m \\
+    \rowcolor{GeoBlue!5}
+    Error Lineal Cierre ($e_L$) & 0.00328 m \\
+    Precisión Relativa ($1:P$) & 1 en 105475 \\
+    \hline
+  \end{tabular}
+\end{table}
+\subsection{Cartera Final de Coordenadas Ajustadas}
+Tras aplicar la regla de la brújula para planimetría y el ajuste altimétrico proporcional, se obtiene el siguiente listado de coordenadas oficiales compensadas, aptas para replanteo y diseño:
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Coordenadas Compensadas de la Red (Parte 1)}
+  \label{tab:ajuste_0}
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Estacionado}} & \textcolor{white}{\textbf{Pto\_Obs}} & \textcolor{white}{\textbf{Ang\_Hz\_Ajus}} & \textcolor{white}{\textbf{Azimut\_Línea}} & \textcolor{white}{\textbf{Dep\_Ajus (E)}} & \textcolor{white}{\textbf{Lat\_Ajus (N)}} \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & - [Visual Ref] & 243° 1' 28.05" & 0.000 & 0.000 \\
+    \hline
+    \rowcolor{white}
+    P1 & P2 & 249° 53' 13.17" & 228° 38' 22.21" & -37.639 & -33.137 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P2 & P3 & 191° 47' 16.17" & 240° 25' 38.38" & -50.307 & -28.546 \\
+    \hline
+    \rowcolor{white}
+    P3 & P4 & 281° 2' 59.17" & 341° 28' 37.55" & -19.557 & 58.374 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P4 & P5 & 246° 35' 31.17" & 48° 4' 8.71" & 56.338 & 50.605 \\
+    \hline
+    \rowcolor{white}
+    P5 & GPS-11 & 188° 26' 49.17" & 56° 30' 57.88" & 26.070 & 17.245 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & 282° 14' 11.17" & 158° 45' 9.05" & 25.096 & -64.541 \\
+    \hline
+  \end{tabular}
+\end{table}
+\vspace{0.8cm}
+\begin{table}[H]
+  \centering
+  \small
+  \caption{Coordenadas Compensadas de la Red (Parte 2)}
+  \label{tab:ajuste_1}
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \rowcolor{GeoBlue}
+    \textcolor{white}{\textbf{Estacionado}} & \textcolor{white}{\textbf{Pto\_Obs}} & \textcolor{white}{\textbf{X\_Estacion}} & \textcolor{white}{\textbf{Y\_Estacion}} & \textcolor{white}{\textbf{Desnivel\_Ajus}} & \textcolor{white}{\textbf{Z\_Estacion}} \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & 87677.229 & 102340.641 & 0.000 & 100.000 \\
+    \hline
+    \rowcolor{white}
+    P1 & P2 & 87702.325 & 102276.100 & -0.107 & 100.303 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P2 & P3 & 87664.685 & 102242.963 & -0.345 & 100.196 \\
+    \hline
+    \rowcolor{white}
+    P3 & P4 & 87614.378 & 102214.417 & 0.015 & 99.851 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    P4 & P5 & 87594.821 & 102272.791 & -0.060 & 99.865 \\
+    \hline
+    \rowcolor{white}
+    P5 & GPS-11 & 87651.159 & 102323.396 & 0.194 & 99.806 \\
+    \hline
+    \rowcolor{GeoBlue!5}
+    GPS-11 & P1 & 87677.229 & 102340.641 & 0.303 & 100.000 \\
+    \hline
+  \end{tabular}
+\end{table}
+\vspace{0.8cm}
+
+\section{Esquema Geométrico de la Red Planimétrica}
+Renderizado CAD generado por \textit{GeoPol Web} con integración de grillas:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.95\textwidth]{Plano_Exportado.png}
+  \caption{Plano As-Built de la Cerrada}
+\end{figure}
+\section{Conclusiones y Dictamen Técnico}
+\begin{itemize}
+  \item Se obtuvo una precisión de 1:105475. Esta precisión es \textbf{ALTA}. Demuestra un excelente trabajo de campo y de instrumentación. Este nivel de error es aplicable para redes de control de alta exigencia, proyectos de infraestructura pesada o trazados geodésicos.
+  \item El procesamiento fue realizado exitosamente de forma automatizada mediante \textbf{GeoPol Web}, suprimiendo el error de cálculo humano y garantizando la trazabilidad matemática requerida por la ingeniería civil moderna.
+  \item Las coordenadas resultantes se encuentran proyectadas y listadas de forma coherente, quedando liberadas para su exportación a plataformas BIM, GIS o software de diseño de vías.
+\end{itemize}
+\end{document}

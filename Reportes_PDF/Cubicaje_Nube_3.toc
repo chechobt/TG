@@ -1,0 +1,8 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Introducción y Metodología de Cubicaje}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Criterios del Diagrama de Masas (Curva Masa)}{2}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Resumen Ejecutivo de Volúmenes}{2}{section.2}%
+\contentsline {section}{\numberline {3}Cuadro de Movimiento de Tierras}{2}{section.3}%
+\contentsline {section}{\numberline {4}Diagrama de Masas (Curva Masa)}{3}{section.4}%
+\contentsline {section}{\numberline {5}Conclusiones y Dictamen Técnico}{3}{section.5}%
+\contentsline {section}{\numberline {6}Anexo Gráfico: Perfiles de Secciones Transversales}{4}{section.6}%
