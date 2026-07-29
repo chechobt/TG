@@ -579,7 +579,6 @@ def compilar_latex_a_pdf(tex_code, output_dir="Reportes_PDF", filename="Reporte_
         f.write(tex_code)
     generar_archivo_bib(output_dir)
     try:
-        try:
         if shutil.which("pdflatex") is None:
             return None, tex_path, "Error: El sistema no encuentra 'pdflatex'."
             
