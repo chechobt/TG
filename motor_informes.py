@@ -108,6 +108,88 @@ def evaluar_volumen(neto, corte, relleno):
     else:
         return f"El diseño presenta una compensación volumétrica prácticamente perfecta, optimizando al máximo los costos de movimiento de tierras y transporte."
 
+def obtener_contenido_informe(tipo_trabajo):
+    """
+    Retorna un diccionario con los bloques de texto en LaTeX para 
+    Introducción, Objetivos y Marco Teórico según el tipo de trabajo.
+    """
+    contenido = {}
+    
+    if "Poligonal" in tipo_trabajo:
+        contenido["intro"] = (
+            r"El presente informe documenta el establecimiento de una red de apoyo planimétrico. "
+            r"La materialización de estos vértices constituye la base fundamental para el levantamiento de detalles, "
+            r"garantizando que la cartografía resultante cumpla con las precisiones requeridas para el diseño geométrico y estructuración de proyectos de ingeniería."
+        )
+        contenido["objetivos"] = (
+            r"\begin{itemize}"
+            r"  \item \textbf{General:} Calcular y compensar la red planimétrica obtenida en campo para determinar las coordenadas definitivas de los vértices."
+            r"  \item \textbf{Específicos:}"
+            r"  \begin{itemize}"
+            r"    \item Cuantificar el error de cierre angular y lineal del circuito."
+            r"    \item Aplicar el método de ajuste por mínimos cuadrados o regla de la brújula según la tolerancia permitida."
+            r"    \item Vincular el levantamiento al sistema oficial de coordenadas."
+            r"  \end{itemize}"
+            r"\end{itemize}"
+        )
+        contenido["marco"] = (
+            r"El procesamiento se rige por las especificaciones técnicas del \textbf{Instituto Geográfico Agustín Codazzi (IGAC)}. "
+            r"Toda la información espacial se encuentra referida al sistema oficial de Colombia, \textbf{MAGNA-SIRGAS (Origen Nacional EPSG: 9377)}, "
+            r"dando cumplimiento a la Resolución 471 de 2020. Para asegurar la fiabilidad en la etapa de construcción, los errores de cierre "
+            r"se evalúan frente a las tolerancias estándar de topografía convencional aplicadas a obras civiles."
+        )
+        
+    elif "Nivelacion" in tipo_trabajo or "Altimetria" in tipo_trabajo:
+        contenido["intro"] = (
+            r"El control vertical es un componente crítico en el desarrollo de infraestructura. Este documento detalla "
+            r"el procedimiento de nivelación geométrica ejecutado para trasladar y establecer cotas de alta precisión "
+            r"en los puntos de control del proyecto."
+        )
+        contenido["objetivos"] = (
+            r"\begin{itemize}"
+            r"  \item \textbf{General:} Determinar las elevaciones ajustadas de los puntos de interés a partir de un Banco de Nivel (BM) de cota conocida."
+            r"  \item \textbf{Específicos:}"
+            r"  \begin{itemize}"
+            r"    \item Calcular el error de cierre altimétrico de la línea de nivelación."
+            r"    \item Distribuir el error de cierre proporcionalmente a la distancia o al número de cambios de estación."
+            r"    \item Generar el perfil altimétrico de la línea evaluada."
+            r"  \end{itemize}"
+            r"\end{itemize}"
+        )
+        # Aquí encaja perfecto el tema de acueductos y el RAS
+        contenido["marco"] = (
+            r"La metodología altimétrica se basa en la nivelación diferencial geométrica. El control riguroso de las cotas "
+            r"es de estricto cumplimiento para el diseño de sistemas de gravedad. Por ejemplo, en proyectos de redes de alcantarillado "
+            r"y diseño de acueductos, garantizar pendientes precisas es un requerimiento técnico estipulado en el "
+            r"\textbf{Reglamento Técnico para el Sector de Agua Potable y Saneamiento Básico (RAS)}."
+        )
+        
+    elif "Volumen" in tipo_trabajo or "Cubicaje" in tipo_trabajo:
+        contenido["intro"] = (
+            r"La cuantificación del movimiento de tierras es determinante para la viabilidad financiera y logística de una obra. "
+            r"Este informe expone las memorias de cálculo volumétrico, analizando las áreas transversales y la compensación longitudinal de masas."
+        )
+        contenido["objetivos"] = (
+            r"\begin{itemize}"
+            r"  \item \textbf{General:} Calcular los volúmenes de corte y relleno requeridos para la conformación del proyecto."
+            r"  \item \textbf{Específicos:}"
+            r"  \begin{itemize}"
+            r"    \item Cuantificar el área transversal en cada abscisa del alineamiento."
+            r"    \item Determinar el volumen neto acumulado y su balance."
+            r"    \item Construir el diagrama de masas para optimizar las distancias de acarreo."
+            r"  \end{itemize}"
+            r"\end{itemize}"
+        )
+        # Aquí encajan normativas de vías y estructuras
+        contenido["marco"] = (
+            r"El cálculo volumétrico se realiza bajo el \textbf{Método de las Áreas Medias}. En el contexto vial, los criterios de "
+            r"compensación y disposición de materiales sobrantes deben alinearse con las Especificaciones Generales de Construcción de Carreteras del \textbf{INVÍAS}. "
+            r"Asimismo, cuando estos movimientos de tierra involucran excavaciones para cimentaciones o conformación de plataformas, "
+            r"se atienden los lineamientos geotécnicos del Título H de la \textbf{NSR-10} (Norma Sismo Resistente Colombiana)."
+        )
+        
+    return contenido
+
 def generar_preambulo_y_caratula(titulo_informe, autores, tutor, tipo_poligonal=None):
     tex = []
     tex.append(r"\documentclass[11pt,letterpaper]{article}")
@@ -199,28 +281,27 @@ def generar_preambulo_y_caratula(titulo_informe, autores, tutor, tipo_poligonal=
 def generar_reporte_poligonal_latex(df_campo, df_ajuste, metricas, tipo_poligonal, autores, tutor, path_grafico=None, fotos_paths=None):
     tex = [generar_preambulo_y_caratula(tipo_poligonal, autores, tutor, tipo_poligonal)]
     
-    tex.append(r"\section{Marco Teórico y Referencia Geodésica}")
-    tex.append(r"El presente informe detalla el cálculo, ajuste y representación de una red de apoyo planimétrico. Este procesamiento se apoya en los lineamientos técnicos de la Topografía Clásica y la normatividad geodésica dictada por el \textbf{Instituto Geográfico Agustín Codazzi (IGAC)}.")
-    tex.append(r"\subsection{Sistema de Georreferenciación (MAGNA-SIRGAS)}")
-    tex.append(r"De acuerdo con la \textbf{Resolución 471 de 2020} (y su modificación en la Resolución 529 de 2020) emitida por el IGAC, el único sistema oficial de coordenadas para la República de Colombia es el Origen Nacional \textbf{MAGNA-SIRGAS (EPSG: 9377)}.")
+    # 1. LLAMADA AL CONTENIDO DINÁMICO
+    textos = obtener_contenido_informe("Poligonal")
     
-    tex.append(r"\subsection{Fundamento Matemático: " + tipo_poligonal + "}")
-    if "Cerrada" in tipo_poligonal:
-        tex.append(r"Una Poligonal Cerrada de Circuito es aquella que inicia en una estación conocida y, tras medir una serie de vértices (deltas), retorna matemáticamente al mismo punto de origen. Esto permite una doble comprobación de errores:")
-        tex.append(r"\begin{itemize}")
-        tex.append(r"  \item \textbf{Cierre Angular:} La suma teórica de los ángulos internos debe cumplir $\Sigma \alpha = (n - 2) \cdot 180^\circ$. El error angular se compensa en partes iguales o ponderadas.")
-        tex.append(r"  \item \textbf{Cierre Lineal:} Las sumatorias de las proyecciones corregidas en el eje Norte ($Y$) y Este ($X$) deben ser estrictamente cero ($\Sigma \Delta N = 0, \Sigma \Delta E = 0$). El error de cierre se ajusta mediante el método de la Brújula (Regla de Bowditch).")
-        tex.append(r"\end{itemize}")
-    else:
-        tex.append(r"Una Poligonal Abierta con Control es aquella que parte de una línea base con azimut y coordenadas conocidas, y finaliza su recorrido en otra estación (o par de estaciones) de coordenadas igualmente conocidas.")
-        tex.append(r"\begin{itemize}")
-        tex.append(r"  \item \textbf{Cierre Angular:} El azimut calculado del último alineamiento se compara contra el azimut teórico conocido de llegada.")
-        tex.append(r"  \item \textbf{Cierre Lineal:} La sumatoria de las proyecciones debe ser igual a la diferencia real de coordenadas entre el punto de llegada y el de partida ($\Sigma \Delta N = N_{llegada} - N_{partida}$). Los desvíos se compensan proporcionalmente a las distancias.")
-        tex.append(r"\end{itemize}")
+    # 2. INSERCIÓN DE INTRODUCCIÓN Y OBJETIVOS
+    tex.append(r"\section{Introducción}")
+    tex.append(textos.get("intro", ""))
+    
+    tex.append(r"\subsection{Objetivos del Procesamiento}")
+    tex.append(textos.get("objetivos", ""))
+    
+    # 3. MARCO TEÓRICO NORMATIVO
+    tex.append(r"\section{Marco Teórico y Referencia Normativa}")
+    tex.append(textos.get("marco", ""))
+    
+    # METODOLOGÍA (Texto de transición)
+    tex.append(r"\subsection{Metodología de Procesamiento Automático}")
+    tex.append(r"El conjunto de datos brutos fue sometido a rutinas de depuración y compensación matricial a través del motor algorítmico de \textbf{GeoPol}.")
 
+    # 4. TABLAS Y RESULTADOS (Tu código original)
     tex.append(r"\section{Trabajo de Campo: Registro de Observaciones}")
-    tex.append(r"En la siguiente sección se relacionan los datos brutos levantados en campo (ángulos horizontales, verticales, distancias inclinadas y alturas instrumentales).")
-    
+    tex.append(r"En la siguiente sección se relacionan los datos brutos levantados en campo.")
     df_c_clean = df_campo.drop(columns=['📸 Tomar_Fotos'], errors='ignore')
     tex.append(dividir_y_generar_tablas(df_c_clean, "Cartera de Observaciones Brutas", "campo"))
     
@@ -237,16 +318,16 @@ def generar_reporte_poligonal_latex(df_campo, df_ajuste, metricas, tipo_poligona
         tex.append(r"\end{figure}")
         
     tex.append(r"\section{Cálculo, Análisis de Errores y Compensación}")
-    tex.append(r"El motor de cálculo topográfico procesó las observaciones, obteniendo las siguientes métricas de cierre (incluyendo planimetría y altimetría) antes de ejecutar el ajuste perimetral:")
+    tex.append(r"Métricas de cierre geométrico antes de ejecutar el ajuste perimetral:")
     
     tex.append(r"\begin{table}[H]")
     tex.append(r"  \centering")
     tex.append(r"  \caption{Métricas de Cierre Geométrico}")
-    tex.append(r"  \begin{tabular}{|l|l|}")
-    tex.append(r"    \hline")
+    tex.append(r"  \begin{tabular}{cc}")
+    tex.append(r"    \toprule")
     tex.append(r"    \rowcolor{GeoBlue}")
     tex.append(r"    \textcolor{white}{\textbf{Parámetro Analizado}} & \textcolor{white}{\textbf{Magnitud del Error}} \\")
-    tex.append(r"    \hline")
+    tex.append(r"    \midrule")
     tex.append(f"    Error Angular Bruto & {escapar_latex(str(metricas.get('err_ang_ant', 0)))} \\\\")
     tex.append(r"    \rowcolor{GeoBlue!5}")
     tex.append(f"    Error Horizontal Este ($e_x$) & {metricas.get('err_e_ant', 0):.5f} m \\\\")
@@ -257,7 +338,7 @@ def generar_reporte_poligonal_latex(df_campo, df_ajuste, metricas, tipo_poligona
     tex.append(r"    \rowcolor{GeoBlue!5}")
     tex.append(f"    Error Lineal Cierre ($e_L$) & {metricas.get('err_h_ant', 0):.5f} m \\\\")
     tex.append(f"    Precisión Planimétrica ($1:P$) & 1 en {int(metricas.get('prec_h', 0))} \\\\")
-    tex.append(r"    \hline")
+    tex.append(r"    \bottomrule")
     tex.append(r"  \end{tabular}")
     tex.append(r"\end{table}")
     
@@ -279,44 +360,52 @@ def generar_reporte_poligonal_latex(df_campo, df_ajuste, metricas, tipo_poligona
     
     tex.append(r"\begin{itemize}")
     tex.append(f"  \\item {comentario_precision}")
-    tex.append(r"  \item El procesamiento fue realizado exitosamente de forma automatizada mediante \textbf{GeoPol Web}, suprimiendo el error de cálculo humano y garantizando la trazabilidad matemática requerida por la ingeniería civil moderna.")
+    tex.append(r"  \item El procesamiento fue automatizado mediante \textbf{GeoPol Web}, garantizando la trazabilidad requerida en interventoría.")
     tex.append(r"\end{itemize}")
+    
+    # 5. INYECCIÓN DE BIBTEX PARA REFERENCIAS
+    tex.append(r"\section{Referencias Bibliográficas}")
+    tex.append(r"\bibliographystyle{apalike}")
+    tex.append(r"\bibliography{referencias}")
     
     tex.append(r"\end{document}")
     return "\n".join(tex)
-
 
 def generar_reporte_volumenes_latex(df_cubicaje, metricas, autores, tutor, path_grafico=None, path_masas=None, paths_secciones=None):
     titulo = "Memorias de Cálculo Matemático y Diseño Vial\\\\ (Cubicaje de Volúmenes)"
     tex = [generar_preambulo_y_caratula(titulo, autores, tutor)]
     
-    tex.append(r"\section{Introducción y Metodología de Cubicaje}")
-    tex.append(r"El presente documento consolida las memorias de cálculo para el movimiento de tierras del trazado evaluado. La cuantificación volumétrica se ejecutó mediante el \textbf{Método de las Áreas Medias (Average End Area Method)}, un estándar aceptado en la ingeniería de carreteras para la estimación de cortes y terraplenes entre abscisas sucesivas.")
-    tex.append(r"")
-    tex.append(r"El modelo asume una transición lineal de las áreas transversales. Los resultados expuestos constituyen un insumo fundamental para la planificación de la obra civil, la programación de maquinaria (Gantt) y la optimización del presupuesto de transporte de material, considerando implícitamente que los volúmenes en banco requerirán factores de esponjamiento y compactación en la fase de ejecución.")    
+    # 1. LLAMADA AL CONTENIDO DINÁMICO
+    textos = obtener_contenido_informe("Volumen")
     
-    tex.append(r"\subsection{Criterios del Diagrama de Masas (Curva Masa)}")
-    tex.append(r"Para el análisis del movimiento de tierras, se ha calculado el volumen neto acumulado. La Curva Masa permite visualizar analíticamente el déficit o superávit de material a lo largo del eje del proyecto, facilitando el diseño de las zonas de préstamo y botadero.")
+    tex.append(r"\section{Introducción}")
+    tex.append(textos.get("intro", ""))
     
+    tex.append(r"\subsection{Objetivos}")
+    tex.append(textos.get("objetivos", ""))
+    
+    tex.append(r"\section{Marco Teórico y Normativo}")
+    tex.append(textos.get("marco", ""))
+    
+    # Resto de tu código
     tex.append(r"\section{Resumen Ejecutivo de Volúmenes}")
     tex.append(r"\begin{itemize}")
-    tex.append(f"  \\item \\textbf{{Volumen Total de Corte (Excavación):}} {metricas.get('Corte_Total', 0):.3f} $m^3$")
-    tex.append(f"  \\item \\textbf{{Volumen Total de Relleno (Terraplén):}} {metricas.get('Relleno_Total', 0):.3f} $m^3$")
-    tex.append(f"  \\item \\textbf{{Balance Neto del Proyecto:}} {metricas.get('Volumen_Neto', 0):.3f} $m^3$")
+    tex.append(f"  \\item \\textbf{{Volumen Total de Corte (Excavación):}} {metricas.get('Corte_Total', 0):,.3f} $m^3$")
+    tex.append(f"  \\item \\textbf{{Volumen Total de Relleno (Terraplén):}} {metricas.get('Relleno_Total', 0):,.3f} $m^3$")
+    tex.append(f"  \\item \\textbf{{Balance Neto del Proyecto:}} {metricas.get('Volumen_Neto', 0):,.3f} $m^3$")
     tex.append(r"\end{itemize}")
     
     tex.append(r"\section{Cuadro de Movimiento de Tierras}")
-    tex.append(r"A continuación, se presenta la tabla de cálculo tabulada. Los valores negativos indican predominancia de relleno, mientras que los positivos corresponden a áreas de corte.")
     tex.append(dividir_y_generar_tablas(df_cubicaje, "Cuadro generalizado de cubicaje", "cubicaje", id_cols=1))
     
     if path_masas:
         path_masas_latex = path_masas.replace('\\', '/')
         tex.append(r"\section{Diagrama de Masas (Curva Masa)}")
-        tex.append(r"Evolución gráfica del volumen acumulado en función de la abscisa (Distancia en K).")
+        tex.append(r"Evolución gráfica del volumen acumulado en función de la abscisa.")
         tex.append(r"\begin{figure}[H]")
         tex.append(r"  \centering")
         tex.append(f"  \\includegraphics[width=0.95\\textwidth]{{{path_masas_latex}}}")
-        tex.append(r"  \\caption{Diagrama de Masas para compensación longitudinal de material}")
+        tex.append(r"  \caption{Diagrama de Masas para compensación longitudinal de material}")
         tex.append(r"\end{figure}")
         
     tex.append(r"\section{Conclusiones y Dictamen Técnico}")
@@ -325,25 +414,20 @@ def generar_reporte_volumenes_latex(df_cubicaje, metricas, autores, tutor, path_
     relleno = metricas.get('Relleno_Total', 0)
     tex.append(r"\begin{itemize}")
     tex.append(f"  \\item {evaluar_volumen(neto, corte, relleno)}")
-    tex.append(r"  \item El \textbf{Diagrama de Masas} demuestra los puntos críticos de corte y la distribución longitudinal del material, permitiendo a los ingenieros y planificadores viales organizar el acarreo en volquetas de manera eficiente.")
+    tex.append(r"  \item El \textbf{Diagrama de Masas} demuestra los puntos críticos de corte y la distribución longitudinal del material.")
     tex.append(r"\end{itemize}")
     
-    # SECCIONES TRANSVERSALES MULTIPLES EN GRID (BOTTOM-UP)
+    # Secciones transversales
     if paths_secciones and len(paths_secciones) > 0:
         tex.append(r"\newpage")
         tex.append(r"\section{Anexo Gráfico: Perfiles de Secciones Transversales}")
-        tex.append(r"A continuación, se adjuntan los perfiles de todas las abscisas calculadas. Conforme a las normativas de presentación de planos de diseño vial, las secciones se han ploteado ordenadas de forma ascendente: \textbf{de abajo hacia arriba y de izquierda a derecha}.")
-        
         paths_secciones = sorted(paths_secciones, key=lambda x: x[0])
         chunks = [paths_secciones[i:i+8] for i in range(0, len(paths_secciones), 8)]
         
         for idx_chunk, chunk in enumerate(chunks):
             tex.append(r"\begin{figure}[H]")
             tex.append(r"  \centering")
-            
-            # Formato estándar Bottom-Up, Left-to-Right en grilla 4x2
             grid_indices = [6, 7, 4, 5, 2, 3, 0, 1]
-            
             for col_i, data_idx in enumerate(grid_indices):
                 if data_idx < len(chunk):
                     abs_val, p_sec = chunk[data_idx]
@@ -352,7 +436,6 @@ def generar_reporte_volumenes_latex(df_cubicaje, metricas, autores, tutor, path_
                     tex.append(f"    \\includegraphics[width=\\linewidth]{{{p_sec_latex}}}")
                     tex.append(r"  \end{minipage}")
                 else:
-                    # Espacio en blanco si la hoja no está llena
                     tex.append(r"  \begin{minipage}{0.48\textwidth}")
                     tex.append(r"    \vspace{4.5cm}") 
                     tex.append(r"  \end{minipage}")
@@ -366,26 +449,37 @@ def generar_reporte_volumenes_latex(df_cubicaje, metricas, autores, tutor, path_
             tex.append(r"\end{figure}")
             if idx_chunk < len(chunks) - 1:
                 tex.append(r"\newpage")
+                
+    # 5. INYECCIÓN DE BIBTEX
+    tex.append(r"\section{Referencias Bibliográficas}")
+    tex.append(r"\bibliographystyle{apalike}")
+    tex.append(r"\bibliography{referencias}")
             
     tex.append(r"\end{document}")
     return "\n".join(tex)
-
 
 def generar_reporte_nivelacion_latex(df_calc, metricas, tipo_nivelacion, autores, tutor, path_grafico=None, fotos_paths=None):
     titulo = f"Informe Técnico de Altimetría\\\\ ({tipo_nivelacion})"
     tex = [generar_preambulo_y_caratula(titulo, autores, tutor)]
     
-    tex.append(r"\section{Marco Teórico y Referencia Altimétrica}")
-    tex.append(r"El presente informe detalla el cálculo, ajuste y compensación de una red de apoyo altimétrico. El proceso se fundamenta en la Nivelación Geométrica o Directa, garantizando la transferencia de cotas desde un Banco de Nivel (BM) de origen hacia los puntos de interés.")
+    # 1. LLAMADA AL CONTENIDO DINÁMICO
+    textos = obtener_contenido_informe("Nivelacion")
+    
+    tex.append(r"\section{Introducción}")
+    tex.append(textos.get("intro", ""))
+    
+    tex.append(r"\subsection{Objetivos}")
+    tex.append(textos.get("objetivos", ""))
+    
+    tex.append(r"\section{Marco Teórico y Normativo}")
+    tex.append(textos.get("marco", ""))
     
     if "Cerrada" in tipo_nivelacion:
-        tex.append(r"Al tratarse de una Nivelación Cerrada, el circuito inicia y termina en el mismo punto de control, lo que permite cuantificar el error de cierre evaluando la diferencia entre la cota final calculada y la cota de partida.")
+        tex.append(r"Al tratarse de una Nivelación Cerrada, el circuito inicia y termina en el mismo punto de control.")
     else:
-        tex.append(r"Al tratarse de una Nivelación Abierta con Control, la línea inicia en un Banco de Nivel conocido y cierra sobre un Banco de Nivel distinto, permitiendo contrastar la cota calculada de llegada con la elevación teórica esperada.")
+        tex.append(r"Al tratarse de una Nivelación Abierta con Control, la línea inicia en un Banco de Nivel conocido y cierra sobre un Banco de Nivel distinto.")
     
     tex.append(r"\section{Cartera Altimétrica Compensada}")
-    tex.append(r"A continuación se relacionan las lecturas de campo (vistas atrás, intermedias y adelante) junto con las cotas instrumentales y las elevaciones ajustadas tras el prorrateo del error de cierre:")
-    
     df_clean = df_calc.drop(columns=['📸 Tomar_Fotos'], errors='ignore')
     tex.append(dividir_y_generar_tablas(df_clean, "Cartera de Nivelación Procesada", "nivelacion"))
     
@@ -402,7 +496,6 @@ def generar_reporte_nivelacion_latex(df_calc, metricas, tipo_nivelacion, autores
         tex.append(r"\end{figure}")
         
     tex.append(r"\section{Análisis de Errores y Compensación Altimétrica}")
-    tex.append(r"Las métricas de validación geométrica del circuito arrojaron los siguientes resultados:")
     tex.append(r"\begin{itemize}")
     tex.append(f"  \\item \\textbf{{Sumatoria Vista Atrás ($\\Sigma V^+$):}} {metricas.get('sum_vista_atras', 0):.3f} m")
     tex.append(f"  \\item \\textbf{{Sumatoria Vista Adelante ($\\Sigma V^-$):}} {metricas.get('sum_vista_adelante', 0):.3f} m")
@@ -421,11 +514,55 @@ def generar_reporte_nivelacion_latex(df_calc, metricas, tipo_nivelacion, autores
         tex.append(r"\end{figure}")
         
     tex.append(r"\section{Conclusiones}")
-    tex.append(r"El ajuste altimétrico se ha distribuido de manera proporcional en los puntos de cambio, obteniendo un conjunto de elevaciones definitivas aptas para la densificación de cotas, control vertical y ejecución de obras civiles.")
+    tex.append(r"El ajuste altimétrico se ha distribuido de manera proporcional en los puntos de cambio, obteniendo cotas definitivas aptas para obras civiles.")
+    
+    # 5. INYECCIÓN DE BIBTEX
+    tex.append(r"\section{Referencias Bibliográficas}")
+    tex.append(r"\bibliographystyle{apalike}")
+    tex.append(r"\bibliography{referencias}")
     
     tex.append(r"\end{document}")
     return "\n".join(tex)
 
+def generar_archivo_bib(output_dir):
+    """
+    Genera un archivo maestro de referencias en formato BibTeX.
+    Puedes agregar aquí todas las normas (NSR-10, RAS, manuales INVÍAS).
+    """
+    bib_content = """
+@techreport{igac2020,
+    author = {{Instituto Geográfico Agustín Codazzi (IGAC)}},
+    title = {Resolución 471 de 2020: Adopción del Origen Nacional para Colombia},
+    year = {2020},
+    address = {Bogotá, Colombia}
+}
+
+@book{mccormac2004,
+    author = {McCormac, Jack C.},
+    title = {Topografía},
+    edition = {4},
+    year = {2004},
+    publisher = {Limusa Wiley}
+}
+
+@techreport{ras2000,
+    author = {{Ministerio de Vivienda, Ciudad y Territorio}},
+    title = {Reglamento Técnico para el Sector de Agua Potable y Saneamiento Básico (RAS)},
+    year = {2000},
+    address = {Colombia}
+}
+
+@techreport{invias2012,
+    author = {{Instituto Nacional de Vías (INVÍAS)}},
+    title = {Especificaciones Generales de Construcción de Carreteras},
+    year = {2012},
+    address = {Bogotá, Colombia}
+}
+"""
+    os.makedirs(output_dir, exist_ok=True)
+    bib_path = os.path.join(output_dir, "referencias.bib")
+    with open(bib_path, "w", encoding="utf-8") as f:
+        f.write(bib_content)
 
 def compilar_latex_a_pdf(tex_code, output_dir="Reportes_PDF", filename="Reporte_Final"):
     os.makedirs(output_dir, exist_ok=True)
@@ -440,15 +577,16 @@ def compilar_latex_a_pdf(tex_code, output_dir="Reportes_PDF", filename="Reporte_
     
     with open(tex_path, "w", encoding="utf-8") as f:
         f.write(tex_code)
-        
+    generar_archivo_bib(output_dir)
     try:
+        try:
         if shutil.which("pdflatex") is None:
-            return None, tex_path, "Error: Windows no encuentra 'pdflatex'."
+            return None, tex_path, "Error: El sistema no encuentra 'pdflatex'."
             
         tex_path_seguro = tex_path.replace('\\', '/')
         output_dir_seguro = output_dir.replace('\\', '/')
         
-        comando = [
+        comando_pdflatex = [
             "pdflatex", 
             "-interaction=nonstopmode", 
             "-halt-on-error", 
@@ -456,13 +594,23 @@ def compilar_latex_a_pdf(tex_code, output_dir="Reportes_PDF", filename="Reporte_
             tex_path_seguro
         ]
         
-        proceso = subprocess.run(comando, capture_output=True, text=True)
+        comando_bibtex = [
+            "bibtex",
+            f"{output_dir_seguro}/{safe_filename}"
+        ]
         
+        # 1. Primera compilación (crea los archivos auxiliares)
+        proceso = subprocess.run(comando_pdflatex, capture_output=True, text=True)
         if proceso.returncode != 0:
             log_error = proceso.stdout[-1500:] if proceso.stdout else proceso.stderr
-            return None, tex_path, f"LaTeX falló al compilar el documento. Revisa el siguiente log de error:\n\n{log_error}"
+            return None, tex_path, f"LaTeX falló al compilar. Log de error:\n\n{log_error}"
             
-        subprocess.run(comando, capture_output=True)
+        # 2. Compilación de bibliografía
+        subprocess.run(comando_bibtex, capture_output=True)
+        
+        # 3. Segunda y tercera compilación (enlaza referencias y tabla de contenido)
+        subprocess.run(comando_pdflatex, capture_output=True)
+        subprocess.run(comando_pdflatex, capture_output=True)
         
         if os.path.exists(pdf_path):
             with open(pdf_path, "rb") as f:
