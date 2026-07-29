@@ -604,8 +604,10 @@ def compilar_latex_a_pdf(tex_code, output_dir="Reportes_PDF", filename="Reporte_
             log_error = proceso.stdout[-1500:] if proceso.stdout else proceso.stderr
             return None, tex_path, f"LaTeX falló al compilar. Log de error:\n\n{log_error}"
             
-        # 2. Compilación de bibliografía
-        subprocess.run(comando_bibtex, capture_output=True)
+        # 2. Compilación de bibliografía (con verificación)
+        proceso_bib = subprocess.run(comando_bibtex, capture_output=True, text=True)
+        if proceso_bib.returncode != 0:
+            return None, tex_path, f"Error en BibTeX: {proceso_bib.stderr}"
         
         # 3. Segunda y tercera compilación (enlaza referencias y tabla de contenido)
         subprocess.run(comando_pdflatex, capture_output=True)
