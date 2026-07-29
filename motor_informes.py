@@ -71,15 +71,19 @@ def dataframe_a_latex_table(df, caption, label):
     latex_tab.append(r"  \small")
     latex_tab.append(f"  \\caption{{{escapar_latex(caption)}}}")
     latex_tab.append(f"  \\label{{tab:{label}}}")
-    alineacion = "|" + "|".join(["c"] * num_columnas) + "|"
+    
+    # MEJORA: Sin líneas verticales. Alineación centrada limpia.
+    alineacion = "c" * num_columnas
     latex_tab.append(f"  \\begin{{tabular}}{{{alineacion}}}")
-    latex_tab.append(r"    \hline")
+    
+    # MEJORA: Uso de toprule, midrule y bottomrule de booktabs
+    latex_tab.append(r"    \toprule")
     latex_tab.append(r"    \rowcolor{GeoBlue}")
-
+    
     headers = [f"\\textcolor{{white}}{{\\textbf{{{escapar_latex(col)}}}}}" for col in df.columns]
     latex_tab.append("    " + " & ".join(headers) + r" \\")
-    latex_tab.append(r"    \hline")
-
+    latex_tab.append(r"    \midrule")
+    
     for idx, row in df.iterrows():
         fila_items = []
         for col in df.columns:
@@ -87,24 +91,22 @@ def dataframe_a_latex_table(df, caption, label):
             if pd.isna(val) or val is None:
                 fila_items.append("---")
             elif isinstance(val, (int, float, np.number)):
-                # Nota: se estandariza a 3 decimales independientemente de la
-                # magnitud (la distinción previa por encima/debajo de 10000
-                # no producía ninguna diferencia real de formato).
-                fila_items.append(f"{val:.3f}")
+                # MEJORA: Formateo numérico para millares o números pequeños
+                fila_items.append(f"{val:,.3f}") 
             else:
                 fila_items.append(escapar_latex(str(val)))
-
+        
         if idx % 2 == 0:
             latex_tab.append(r"    \rowcolor{GeoBlue!5}")
         else:
             latex_tab.append(r"    \rowcolor{white}")
-
+            
         latex_tab.append("    " + " & ".join(fila_items) + r" \\")
-        latex_tab.append(r"    \hline")
-
+        
+    latex_tab.append(r"    \bottomrule")
     latex_tab.append(r"  \end{tabular}")
     latex_tab.append(r"\end{table}")
-
+    
     return "\n".join(latex_tab)
 
 
@@ -225,32 +227,21 @@ def evaluar_precision(prec_h):
     return dictamen, recomendaciones
 
 
-def evaluar_volumen(neto, corte, relleno, analisis_acarreo=None):
+def evaluar_volumen(neto, corte, relleno):
     if neto > 0:
-        dictamen = ("Dado el balance volumétrico resultante, el proyecto requiere transportar material "
-                     "excedentario hacia un sitio de disposición final (botadero), ya que los volúmenes de "
-                     "excavación superan a los terraplenes requeridos.")
-        recomendaciones = [
-            "Identificar y gestionar la autorización de un sitio de disposición final de material sobrante conforme a la normativa ambiental vigente.",
-            "Considerar el factor de esponjamiento del material de corte al dimensionar el número de viajes de volqueta requeridos.",
-            "Planificar el acarreo priorizando los tramos con mayor excedente para optimizar distancias de transporte.",
-        ]
+        return (f"El balance volumétrico presenta un excedente neto de material de {neto:,.2f} $m^3$. "
+                "Desde el punto de vista de diseño vial, el proyecto requiere prever la logística de cargue, "
+                "transporte y disposición final en zonas de botadero (ZODME) autorizadas ambientalmente. "
+                "Se sugiere evaluar ajustes en la rasante si se busca optimizar este excedente.")
     elif neto < 0:
-        dictamen = ("El diseño geométrico evaluado requiere la importación de material de préstamo, dado que "
-                     "el volumen de relleno (terraplén) supera la cantidad de material obtenido por excavación.")
-        recomendaciones = [
-            "Identificar y gestionar la autorización de una fuente de material de préstamo cercana al proyecto.",
-            "Considerar el factor de compactación del material de préstamo al calcular el volumen a adquirir en banco.",
-            "Evaluar si un ajuste del diseño geométrico (rasante) permite reducir el déficit de material.",
-        ]
+        return (f"El diseño geométrico resulta en un déficit neto de material de {abs(neto):,.2f} $m^3$. "
+                "Se hace indispensable la importación de material desde fuentes de préstamo o canteras certificadas "
+                "para garantizar la conformación de los terraplenes. Es fundamental verificar que las distancias "
+                "de acarreo no impacten negativamente el presupuesto de obra.")
     else:
-        dictamen = ("El diseño presenta una compensación volumétrica prácticamente perfecta, optimizando al "
-                     "máximo los costos de movimiento de tierras y transporte.")
-        recomendaciones = [
-            "Aprovechar la compensación planificando el movimiento interno de tierras por tramos, minimizando distancias de acarreo.",
-            "Verificar que la secuencia constructiva respete el diagrama de masas para no generar sobrecostos por doble manejo de material.",
-        ]
-
+        return ("El diseño ha logrado una compensación volumétrica óptima (balance cercano a cero). "
+                "Esta condición representa el escenario ideal en el diseño geométrico, minimizando drásticamente "
+                "los costos de sobreacarreo y el impacto ambiental por explotación de fuentes de materiales.")
     if analisis_acarreo:
         dist_libre = analisis_acarreo.get('distancia_libre_km')
         costo_m3 = analisis_acarreo.get('costo_m3')
@@ -389,8 +380,13 @@ def generar_preambulo_y_caratula(titulo_informe, autores, tutor, tipo_poligonal=
     tex.append(r"\usepackage[utf8]{inputenc}")
     tex.append(r"\usepackage[spanish,es-tabla]{babel}")
     tex.append(r"\usepackage[margin=2.5cm]{geometry}")
+    
+    # MEJORA: Tipografía más profesional (Palatino para texto, Helvetica para títulos)
+    tex.append(r"\usepackage{mathpazo}") 
+    tex.append(r"\usepackage[scaled=0.92]{helvet}")
+    
     tex.append(r"\usepackage{amsmath,amssymb}")
-    tex.append(r"\usepackage{booktabs}")
+    tex.append(r"\usepackage{booktabs}") # Para tablas profesionales
     tex.append(r"\usepackage{graphicx}")
     tex.append(r"\usepackage{float}")
     tex.append(r"\usepackage{fancyhdr}")
@@ -400,20 +396,21 @@ def generar_preambulo_y_caratula(titulo_informe, autores, tutor, tipo_poligonal=
     tex.append(r"\usepackage{transparent}")
     tex.append(r"\usepackage{eso-pic}")
     tex.append(r"\usepackage{caption}")
-
+    
+    # Paleta corporativa
     tex.append(r"\definecolor{GeoOrange}{HTML}{FF8C00}")
     tex.append(r"\definecolor{GeoBlue}{HTML}{0D47A1}")
-
-    # MARCA DE AGUA (WATERMARK)
+    
+    # MARCA DE AGUA
     ruta_logo = "Iconos/logo_geopol.png"
     if os.path.exists(ruta_logo):
         ruta_logo_latex = ruta_logo.replace('\\', '/')
         tex.append(r"\AddToShipoutPictureBG{")
         tex.append(r"  \AtPageCenter{")
-        tex.append(f"    \\makebox[0pt]{{\\transparent{{0.06}}\\includegraphics[width=12cm]{{{ruta_logo_latex}}}}}")
+        tex.append(f"    \\makebox[0pt]{{\\transparent{{0.05}}\\includegraphics[width=12cm]{{{ruta_logo_latex}}}}}")
         tex.append(r"  }")
         tex.append(r"}")
-
+    
     tex.append(r"\hypersetup{colorlinks=true, linkcolor=GeoBlue, urlcolor=GeoOrange}")
     tex.append(r"\pagestyle{fancy}")
     tex.append(r"\fancyhf{}")
@@ -422,28 +419,29 @@ def generar_preambulo_y_caratula(titulo_informe, autores, tutor, tipo_poligonal=
     tex.append(r"\fancyfoot[C]{\thepage}")
     tex.append(r"\renewcommand{\headrulewidth}{0.4pt}")
     tex.append(r"\renewcommand{\footrulewidth}{0.4pt}")
-
+    
     tex.append(r"\begin{document}")
-
-    # PORTADA
+    
+    # PORTADA MEJORADA
     tex.append(r"\begin{titlepage}")
     tex.append(r"\begin{tikzpicture}[remember picture,overlay]")
     tex.append(r"  \fill[GeoBlue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);")
-    tex.append(r"  \fill[GeoOrange] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.5cm]current page.north east);")
-    tex.append(r"  \fill[GeoBlue!5] (current page.south west) rectangle ([yshift=4cm]current page.south east);")
+    tex.append(r"  \fill[GeoOrange] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.3cm]current page.north east);")
+    tex.append(r"  \fill[GeoBlue!2] (current page.south west) rectangle ([yshift=4cm]current page.south east);")
     tex.append(r"\end{tikzpicture}")
-
+    
     tex.append(r"\vspace*{-2cm}")
     tex.append(r"\begin{center}")
-    tex.append(r"  \textcolor{white}{\Huge \textbf{GEOPORTAL WEB (GeoPol)}} \\[0.5cm]")
+    tex.append(r"  \textcolor{white}{\Huge \textsf{\textbf{GEOPORTAL WEB (GeoPol)}}} \\[0.5cm]")
     tex.append(r"  \textcolor{white}{\large \textit{''Máxima precisión al alcance de tus manos''}} \\[2cm]")
     tex.append(r"  \vspace{3cm}")
-    tex.append(r"  {\LARGE \textbf{INFORME TÉCNICO DE INGENIERÍA}} \\[0.5cm]")
+    tex.append(r"  {\LARGE \textsf{\textbf{INFORME TÉCNICO DE INGENIERÍA}}} \\[0.5cm]")
+    
     if tipo_poligonal:
-        tex.append(f"  {{\\Large \\textbf{{{tipo_poligonal}}}}} \\\\[2cm]")
+        tex.append(f"  {{\\Large \\textsf{{\\textbf{{{tipo_poligonal}}}}}}} \\\\[2cm]")
     else:
-        tex.append(f"  {{\\Large \\textbf{{{titulo_informe}}}}} \\\\[2cm]")
-
+        tex.append(f"  {{\\Large \\textsf{{\\textbf{{{titulo_informe}}}}}}} \\\\[2cm]")
+    
     tex.append(r"  \begin{flushleft}")
     tex.append(r"    \Large \textbf{Autores del Procesamiento:}\\[0.2cm]")
     for aut in autores:
@@ -455,14 +453,19 @@ def generar_preambulo_y_caratula(titulo_informe, autores, tutor, tipo_poligonal=
     tex.append(r"  \vfill")
     tex.append(r"  \textbf{UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS}\\[0.2cm]")
     tex.append(r"  Facultad de Medio Ambiente y Recursos Naturales \\ Ingeniería Topográfica / Civil \\[0.2cm]")
-    tex.append(f"  Bogotá D.C. -- {datetime.now().strftime('%d de %B de %Y')}")
+    
+    # MEJORA: Fecha estandarizada solo a Mes y Año, inmune al locale del servidor.
+    meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+    mes_actual = meses[datetime.now().month - 1]
+    anio_actual = datetime.now().year
+    tex.append(f"  Bogotá D.C. -- {mes_actual} de {anio_actual}")
+    
     tex.append(r"\end{center}")
     tex.append(r"\end{titlepage}")
-
+    
     tex.append(r"\tableofcontents")
     tex.append(r"\newpage")
     return "\n".join(tex)
-
 
 # -------------------------------------------------------------------
 # INFORME: POLIGONALES
