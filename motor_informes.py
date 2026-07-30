@@ -608,12 +608,12 @@ def compilar_latex_a_pdf(tex_code, output_dir="Reportes_PDF", filename="Reporte_
         proceso_bib = subprocess.run(comando_bibtex, capture_output=True, text=True)
         
         if proceso_bib.returncode != 0:
-            # Esto imprimirá el error real en la terminal de tu computadora o en los logs de Streamlit
-            print("--- LOG DE ERROR BIBTEX ---")
-            print(proceso_bib.stdout)
-            print(proceso_bib.stderr)
-            print("---------------------------")
-            return None, tex_path, f"Error en BibTeX: {proceso_bib.stderr}"
+            # Combinamos stdout y stderr para no perder nada
+            log_completo = (proceso_bib.stdout + "\n" + proceso_bib.stderr).strip()
+            # Si el log está vacío, damos un mensaje genérico, si no, mostramos el log
+            error_mensaje = log_completo if log_completo else "Error desconocido de BibTeX"
+            
+            return None, tex_path, f"Error en BibTeX: {error_mensaje}"
         
         # 3. Segunda y tercera compilación (enlaza referencias y tabla de contenido)
         subprocess.run(comando_pdflatex, capture_output=True)
