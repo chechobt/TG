@@ -365,6 +365,7 @@ def generar_reporte_poligonal_latex(df_campo, df_ajuste, metricas, tipo_poligona
     
     # 5. INYECCIÓN DE BIBTEX PARA REFERENCIAS
     tex.append(r"\section{Referencias Bibliográficas}")
+    tex.append(r"\nocite{*}")
     tex.append(r"\bibliographystyle{apalike}")
     tex.append(r"\bibliography{referencias}")
     
@@ -452,6 +453,7 @@ def generar_reporte_volumenes_latex(df_cubicaje, metricas, autores, tutor, path_
                 
     # 5. INYECCIÓN DE BIBTEX
     tex.append(r"\section{Referencias Bibliográficas}")
+    tex.append(r"\nocite{*}")
     tex.append(r"\bibliographystyle{apalike}")
     tex.append(r"\bibliography{referencias}")
             
@@ -518,6 +520,7 @@ def generar_reporte_nivelacion_latex(df_calc, metricas, tipo_nivelacion, autores
     
     # 5. INYECCIÓN DE BIBTEX
     tex.append(r"\section{Referencias Bibliográficas}")
+    tex.append(r"\nocite{*}")
     tex.append(r"\bibliographystyle{apalike}")
     tex.append(r"\bibliography{referencias}")
     
@@ -595,7 +598,7 @@ def compilar_latex_a_pdf(tex_code, output_dir="Reportes_PDF", filename="Reporte_
         
         comando_bibtex = [
             "bibtex",
-            f"{output_dir_seguro}/{safe_filename}"
+            safe_filename 
         ]
         
         # 1. Primera compilación (crea los archivos auxiliares)
@@ -605,7 +608,12 @@ def compilar_latex_a_pdf(tex_code, output_dir="Reportes_PDF", filename="Reporte_
             return None, tex_path, f"LaTeX falló al compilar. Log de error:\n\n{log_error}"
             
         # 2. Compilación de bibliografía
-        proceso_bib = subprocess.run(comando_bibtex, capture_output=True, text=True)
+        proceso_bib = subprocess.run(
+            comando_bibtex, 
+            capture_output=True, 
+            text=True, 
+            cwd=output_dir_seguro 
+        )
         
         if proceso_bib.returncode != 0:
             # Combinamos stdout y stderr para no perder nada
