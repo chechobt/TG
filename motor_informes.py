@@ -2096,32 +2096,7 @@ def generar_reporte_poligonal_latex(df_campo, df_ajuste, metricas, tipo_poligona
           if este_referencia and altura_elipsoidal is not None else None)
 
     # ---------- Panel de indicadores ----------
-    kpis = []
     prec_h = float(metricas.get("prec_h", 0) or 0)
-    kpis.append({"titulo": "Precisión planimétrica",
-                 "valor": f"1:{int(prec_h)}" if prec_h else "---",
-                 "sub": f"exigida 1:{precision_exigida}",
-                 "estado": (lin or {}).get("estado", "alerta")})
-    kpis.append({"titulo": "Error angular", "valor": ang["error_dms"],
-                 "sub": f"tolerancia {ang['tolerancia_dms']}", "estado": ang["estado"]})
-    kpis.append({"titulo": "Error lineal de cierre",
-                 "valor": numero_plano(err_h, 4).replace(".", ",") + " m",
-                 "sub": (f"azimut {azi['azimut_dms']}" if azi["azimut_grados"] is not None
-                         else ""), "estado": "neutro"})
-    if area:
-        kpis.append({"titulo": "Área del polígono",
-                     "valor": f"{area['area_ha']:.4f}".replace(".", ",") + " ha",
-                     "sub": f"{area['area_fanegadas']:.3f}".replace(".", ",")
-                            + " fanegadas", "estado": "neutro"})
-        kpis.append({"titulo": "Perímetro",
-                     "valor": f"{area['perimetro_m']:.3f}".replace(".", ",") + " m",
-                     "sub": f"{area['n_vertices']} vértices", "estado": "neutro"})
-    if fe:
-        kpis.append({"titulo": "Factor combinado",
-                     "valor": f"{fe['factor_combinado']:.7f}".replace(".", ","),
-                     "sub": f"{fe['ppm']:.1f} ppm".replace(".", ","), "estado": "neutro"})
-    tex.append(panel_kpi(kpis, columnas=3))
-    tex.append(r"\newpage")
 
     textos = obtener_contenido_informe("Poligonal")
     tex.append(r"\section{Introducción}")
@@ -2316,29 +2291,6 @@ def generar_reporte_nivelacion_latex(df_calc, metricas, tipo_nivelacion, autores
         metricas.get("cota_inicial", metricas.get("cota_teorica_final", 0)),
         metricas.get("cota_final_cruda", 0))
 
-    kpis = [
-        {"titulo": "Error de cierre",
-         "valor": f"{err_mm:.1f} mm".replace(".", ","),
-         "sub": f"tolerancia {niv['tolerancia_mm']:.1f} mm".replace(".", ","),
-         "estado": niv["estado"]},
-        {"titulo": "Orden de nivelación", "valor": f"k = {niv['k']:g}",
-         "sub": niv["orden"], "estado": "neutro"},
-        {"titulo": "Longitud nivelada",
-         "valor": f"{niv['K_km']:.3f} km".replace(".", ","),
-         "sub": "K en la fórmula de tolerancia", "estado": "neutro"},
-        {"titulo": "Cuadre aritmético",
-         "valor": ("correcto" if chq["cuadra"] else "incorrecto"),
-         "sub": f"discrepancia {chq['discrepancia']*1000:.2f} mm".replace(".", ","),
-         "estado": chq["estado"]},
-    ]
-    if bal:
-        kpis.append({"titulo": "Balance de visuales",
-                     "valor": f"{bal['desbalance_pct']:.2f} %".replace(".", ","),
-                     "sub": f"desbalance {bal['desbalance_m']:.1f} m".replace(".", ","),
-                     "estado": bal["estado"]})
-    tex.append(panel_kpi(kpis, columnas=3))
-    tex.append(r"\newpage")
-
     textos = obtener_contenido_informe("Nivelacion")
     tex.append(r"\section{Introducción}")
     tex.append(textos["intro"])
@@ -2506,27 +2458,6 @@ def generar_reporte_volumenes_latex(df_cubicaje, metricas, autores, tutor,
           if abscisas and volumenes_netos else None)
     acar = (analisis_acarreo(cm["abscisas"], cm["acumulado"], acarreo_libre, estacion_m)
             if cm else None)
-
-    tex.append(panel_kpi([
-        {"titulo": "Corte (banco)",
-         "valor": f"{corte:,.0f}".replace(",", ".") + " m³", "estado": "neutro"},
-        {"titulo": "Relleno (compactado)",
-         "valor": f"{relleno:,.0f}".replace(",", ".") + " m³", "estado": "neutro"},
-        {"titulo": "Balance real",
-         "valor": f"{bal['balance_real']:,.0f}".replace(",", ".") + " m³",
-         "sub": ("excedente a botadero" if bal["balance_real"] > 0
-                 else "requiere préstamo"),
-         "estado": "alerta" if abs(bal["balance_real"]) > 0.05 * max(corte, 1) else "ok"},
-        {"titulo": "Corte suelto a transportar",
-         "valor": f"{bal['corte_suelto']:,.0f}".replace(",", ".") + " m³",
-         "sub": f"esponjamiento {bal['esponjamiento']*100:.0f} %", "estado": "neutro"},
-        {"titulo": "Viajes de volqueta", "valor": f"{viaj['viajes']:,}".replace(",", "."),
-         "sub": f"capacidad {capacidad_volqueta:g} m³", "estado": "neutro"},
-        {"titulo": "Balance geométrico",
-         "valor": f"{bal['balance_geometrico']:,.0f}".replace(",", ".") + " m³",
-         "sub": "sin corregir (referencia)", "estado": "neutro"},
-    ], columnas=3))
-    tex.append(r"\newpage")
 
     textos = obtener_contenido_informe("Volumen")
     tex.append(r"\section{Introducción}")
