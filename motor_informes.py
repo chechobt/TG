@@ -1367,8 +1367,7 @@ def tabla_cumplimiento(filas, caption="Verificación de cumplimiento normativo")
 def ficha_metadatos(meta, caps=None):
     """Ficha de trazabilidad al inicio del informe."""
     caps = caps or capacidades_latex()
-    out = [r"\section*{Ficha técnica del levantamiento}",
-           r"\addcontentsline{toc}{section}{Ficha técnica del levantamiento}"]
+    out = [r"\section{Ficha técnica del levantamiento}"]
     if caps.get("tcolorbox", False):
         out.append(r"\begin{tcolorbox}[ficha]")
     else:
@@ -2075,8 +2074,7 @@ def generar_reporte_poligonal_latex(df_campo, df_ajuste, metricas, tipo_poligona
         meta.update(ficha_equipo_a_metadatos(equipo))
     if metadatos:
         meta.update(metadatos)
-    tex.append(ficha_metadatos(meta))
-
+    
     # ---------- Cálculos de tolerancia ----------
     n_vert = len(df_ajuste) if df_ajuste is not None else 0
     prec_eq = float((equipo or {}).get("precision_angular_seg", 5.0))
@@ -2137,6 +2135,8 @@ def generar_reporte_poligonal_latex(df_campo, df_ajuste, metricas, tipo_poligona
     tex.append(r"El conjunto de datos brutos fue sometido a rutinas de depuración y "
                r"compensación matricial a través del motor algorítmico de "
                r"\textbf{GeoPol}.")
+                                        
+    tex.append(ficha_metadatos(meta))
 
     # ---------- Campo ----------
     tex.append(r"\section{Trabajo de Campo: Registro de Observaciones}")
@@ -2304,8 +2304,7 @@ def generar_reporte_nivelacion_latex(df_calc, metricas, tipo_nivelacion, autores
         meta["Fuente del amarre"] = bm_partida.get("entidad", "")
     if metadatos:
         meta.update(metadatos)
-    tex.append(ficha_metadatos(meta))
-
+    
     # ---------- Análisis ----------
     err_mm = float(metricas.get("error_cierre_mm", 0.0))
     bal = (balance_visuales(dist_atras, dist_adelante)
@@ -2356,6 +2355,8 @@ def generar_reporte_nivelacion_latex(df_calc, metricas, tipo_nivelacion, autores
                    r"inicia en un Banco de Nivel conocido y cierra sobre un Banco "
                    r"de Nivel distinto de cota igualmente conocida.")
 
+    tex.append(ficha_metadatos(meta))
+                                        
     tex.append(r"\section{Cartera Altimétrica Compensada}")
     tex.append(tabla_larga(df_calc, "Cartera de nivelación procesada", "nivelacion"))
 
@@ -2495,8 +2496,7 @@ def generar_reporte_volumenes_latex(df_cubicaje, metricas, autores, tutor,
         meta.update(ficha_equipo_a_metadatos(equipo))
     if metadatos:
         meta.update(metadatos)
-    tex.append(ficha_metadatos(meta))
-
+    
     corte = float(metricas.get("Corte_Total", 0.0))
     relleno = float(metricas.get("Relleno_Total", 0.0))
     bal = balance_volumetrico_corregido(corte, relleno, material)
@@ -2535,6 +2535,8 @@ def generar_reporte_volumenes_latex(df_cubicaje, metricas, autores, tutor,
     tex.append(textos["objetivos"])
     tex.append(r"\section{Marco Teórico y Normativo}")
     tex.append(textos["marco"])
+
+    tex.append(ficha_metadatos(meta))
 
     # ---------- Balance corregido ----------
     tex.append(r"\section{Balance Volumétrico Real}")
