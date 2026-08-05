@@ -1,0 +1,8 @@
+lmodern
+texlive-fonts-recommended
+texlive-lang-spanish
+texlive-latex-base
+texlive-latex-extra
+texlive-latex-recommended
+texlive-pictures
+texlive-science
